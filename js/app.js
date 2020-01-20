@@ -2,7 +2,8 @@
 const email = document.getElementById("email");
 const asunto = document.getElementById("asunto");
 const mensaje = document.getElementById("mensaje");
-const btnEnviar = document.getElementById("enviar")
+const btnEnviar = document.getElementById("enviar");
+const formularioEnviar = document.getElementById("enviar-mail");
 
 //-- EVENT LISTENER'S --
 eventListeners();
@@ -15,6 +16,9 @@ function eventListeners(){
    email.addEventListener("blur", validarCampo);
    asunto.addEventListener("blur", validarCampo);
    mensaje.addEventListener("blur", validarCampo);
+
+   //Confirma el submit del formulario
+   formularioEnviar.addEventListener("submit", enviarEmail);
 }
 
 //-- FUNCIONES --
@@ -67,4 +71,35 @@ function validarEmail(email){
       email.classList.add("error");       //añade la clase error
       email.classList.remove("success");  //remueve la clase success
    }
+}
+
+//Se encarga del procesado después de pulsar el botón "enviar"
+function enviarEmail(e){
+   //Obtenemos el id del documento para el gif spinner
+   const spinnerGif = document.getElementById("spinner");   
+   //Añade el atributo css display:block a spinnerGif
+   spinnerGif.style.display = "block";
+
+   //Crea un nuevo elemento en el DOM del tipo img
+   const enviadoGif = document.createElement("img");
+   //Obtiene la fuente de la imagen (url);
+   enviadoGif.src = "img/mail.gif";
+   //Añade el atributo css display:block a enviado Gif
+   enviadoGif.style.display = "block";
+
+   //La función setTimeout permite ejecutar elementos en un intervalo de tiempo dado
+   setTimeout(function(){
+      //Añade el atributo css display: none a spinnerGif para ocultarlo
+      spinnerGif.style.display = "none";
+      //Agrega enviadoGif al DOM
+      document.getElementById("loaders").appendChild(enviadoGif);
+
+      setTimeout(function(){
+         enviadoGif.remove();       //Remueve enviadoGif
+         formularioEnviar.reset();  //Reinicia los valores del formulario
+      }, 5000);
+   }, 3000);
+
+   //Previene el enviado por defecto del formulario
+   e.preventDefault();
 }
